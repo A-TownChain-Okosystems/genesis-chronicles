@@ -1,6 +1,6 @@
 # Copyright (c) 2026 Michael Wroblewski / ShivaCore / A-TownChain-Okosystems. All Rights Reserved.
 """
-Shivamon Battle Engine v2.0.0 — ATC-9000 Standard
+Genesis Chronicles Battle Engine v2.0.0 — ATC-9000 Standard
 Vollständiges Kampfsystem: Rundenbasiert, Typ-Schwächen, Moves, XP.
 """
 import hashlib, random, time
@@ -38,7 +38,7 @@ class Move:
     effect:   str = ""    # "burn", "stun", "heal", etc.
 
 @dataclass
-class BattleShivamon:
+class BattleGenesis Chronicles:
     name:     str
     element:  Element
     hp:       int
@@ -80,7 +80,7 @@ class BattleEngine:
         h   = hashlib.sha3_256(raw).hexdigest()
         return int(h[:8], 16) / 0xFFFFFFFF
 
-    def _damage(self, attacker: BattleShivamon, defender: BattleShivamon,
+    def _damage(self, attacker: BattleGenesis Chronicles, defender: BattleGenesis Chronicles,
                 move: Move) -> Tuple[int, float, bool]:
         # Typ-Effektivität
         chart    = TYPE_CHART.get(move.element, {})
@@ -97,13 +97,13 @@ class BattleEngine:
         dmg   = int(base * eff * crit_mul * rand)
         return max(1, dmg), eff, crit
 
-    def _priority(self, a: BattleShivamon, b: BattleShivamon) -> Tuple[BattleShivamon, BattleShivamon]:
-        """Schnelleres Shivamon greift zuerst an."""
+    def _priority(self, a: BattleGenesis Chronicles, b: BattleGenesis Chronicles) -> Tuple[BattleGenesis Chronicles, BattleGenesis Chronicles]:
+        """Schnelleres Genesis Chronicles greift zuerst an."""
         if a.speed >= b.speed:
             return a, b
         return b, a
 
-    def battle(self, s1: BattleShivamon, s2: BattleShivamon,
+    def battle(self, s1: BattleGenesis Chronicles, s2: BattleGenesis Chronicles,
                max_rounds: int = 50) -> dict:
         rounds: List[BattleRound] = []
         round_num = 0

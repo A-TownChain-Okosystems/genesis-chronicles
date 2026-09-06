@@ -1,12 +1,12 @@
-# 📋 Komponenten-Plan — atc-shivamon
+# 📋 Komponenten-Plan — genesis-chronicles
 
 > **Erstellt:** 2026-08-06 | **Agent:** Aurora (MasterBrain · Base44)
 
 ## Übersicht
 
-**Repo:** atc-shivamon  
-**Name:** ATC Shivamon — NFT Battle Game  
-**Beschreibung:** Shivamon NFT Battle Game. Creatures, DNA, Battles, Breeding, Marketplace.  
+**Repo:** genesis-chronicles  
+**Name:** ATC Genesis Chronicles — NFT Battle Game  
+**Beschreibung:** Genesis Chronicles NFT Battle Game. Creatures, DNA, Battles, Breeding, Marketplace.  
 **Layer:** L8 — Game  
 **Sprint:** 2.5  
 **ATC-Standards:** ATC-90
@@ -15,7 +15,7 @@
 
 ## Komponenten
 
-### 1. shivamon_contract.atc
+### 1. genesis_chronicles_contract.atc
 
 **Beschreibung:** Core Contract: mint, transfer, DNA, stats, leveling
 
@@ -125,7 +125,7 @@
 
 ## Implementierungs-Reihenfolge
 
-1. `shivamon_contract.atc` — Core Contract
+1. `genesis_chronicles_contract.atc` — Core Contract
 2. `battle_system.atc` — Battle-System
 3. `breeding.atc` — Breeding
 4. `marketplace_contract.atc` — Marketplace

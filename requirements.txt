@@ -1,4 +1,4 @@
-# shivamon — Dependencies
+# genesis_chronicles — Dependencies
 # Teil des A-TownChain Ökosystems
 
 flask>=3.0

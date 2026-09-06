@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Michael Wroblewski / ShivaCore / A-TownChain-Okosystems. All Rights Reserved.
 """
 blockchain/contracts/marketplace/marketplace_contract.py
-ATC Marketplace — Shivamon NFT kaufen & verkaufen
+ATC Marketplace — Genesis Chronicles NFT kaufen & verkaufen
 Issue #13: ATC Marketplace
 
 Features:
@@ -28,7 +28,7 @@ class ListingStatus(Enum):
 @dataclass
 class Listing:
     listing_id:   str
-    token_id:     str           # Shivamon Token-ID
+    token_id:     str           # Genesis Chronicles Token-ID
     seller:       str           # ATC-Adresse
     price_atc:    float         # Verkaufspreis in ATC
     rarity:       str           # Common/Rare/Epic/Legendary/Genesis
@@ -67,7 +67,7 @@ class MarketplaceContract(BaseContract):
     Platform-Fee: 1% → Treasury
     """
 
-    ROYALTY_PERCENT  = 2.5    # 2.5% → Shivamon Creator
+    ROYALTY_PERCENT  = 2.5    # 2.5% → Genesis Chronicles Creator
     PLATFORM_PERCENT = 1.0    # 1.0% → Treasury/Owner
     LISTING_TTL      = 30 * 24 * 3600   # 30 Tage Auto-Expire
 
@@ -77,11 +77,11 @@ class MarketplaceContract(BaseContract):
         self.token_listing: dict[str, str]     = {}   # token_id → listing_id
         self.sales_history: list[dict]         = []
         self._atc_balances: dict[str, float]   = {}
-        self._nft_contract  = None   # ShivamonContract-Referenz
+        self._nft_contract  = None   # GenesisChroniclesContract-Referenz
 
     # ── Integration ────────────────────────────────────
     def set_token_contract(self, nft_contract):
-        """Verbindet mit dem ShivamonContract."""
+        """Verbindet mit dem GenesisChroniclesContract."""
         self._nft_contract = nft_contract
 
     def set_balance_oracle(self, balances: dict):
@@ -94,7 +94,7 @@ class MarketplaceContract(BaseContract):
         price_atc: float,
         nft_meta: dict = None
     ) -> dict:
-        """Listet ein Shivamon-NFT zum Verkauf auf."""
+        """Listet ein Genesis Chronicles-NFT zum Verkauf auf."""
         self.when_not_paused()
         if price_atc <= 0:
             raise ValueError("Preis muss > 0 ATC sein")
@@ -168,7 +168,7 @@ class MarketplaceContract(BaseContract):
         balances[buyer]               = buyer_balance - listing.price_atc
         balances[listing.seller]      = balances.get(listing.seller, 0.0) + seller_gets
         balances[self.owner]          = balances.get(self.owner, 0.0) + platform_fee
-        # Royalty → Contract-Owner (= ursprünglicher Shivamon-Creator)
+        # Royalty → Contract-Owner (= ursprünglicher Genesis Chronicles-Creator)
         balances["ROYALTY_TREASURY"]  = balances.get("ROYALTY_TREASURY", 0.0) + royalty
 
         # NFT transferieren

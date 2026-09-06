@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Michael Wroblewski / ShivaCore / A-TownChain-Okosystems. All Rights Reserved.
 // ─────────────────────────────────────────────────────────────
-// ATC-90 — Shivamon NFT Contract
+// ATC-90 — Genesis Chronicles NFT Contract
 // Sprint 2.5 | Smart Contract Layer | Chain-ID 658467
-// Migrated from: modules/shivamon/contracts/shivamon_contract.py (269 lines)
+// Migrated from: modules/genesis_chronicles/contracts/genesis_chronicles_contract.py (269 lines)
 // NFT battle creatures: elements, stats, rarity, DNA, leveling, battles
 // ─────────────────────────────────────────────────────────────
 
@@ -13,7 +13,7 @@ const MAX_LEVEL: u16 = 100
 const XP_PER_LEVEL: u32 = 1000
 const BATTLE_COOLDOWN: u64 = 3600  // 1 hour
 
-struct ShivamonStats {
+struct GenesisChroniclesStats {
     hp: u16,
     attack: u16,
     defense: u16,
@@ -21,7 +21,7 @@ struct ShivamonStats {
     special: u16,
 }
 
-struct ShivamonNFT {
+struct GenesisChroniclesNFT {
     token_id: Hash,
     name: String,
     element: Element,
@@ -34,11 +34,11 @@ struct ShivamonNFT {
     losses: u16,
     minted_at: u64,
     dna_hash: Hash,
-    stats: ShivamonStats,
+    stats: GenesisChroniclesStats,
 }
 
-contract ShivamonContract {
-    state tokens: Map<Hash, ShivamonNFT>
+contract GenesisChroniclesContract {
+    state tokens: Map<Hash, GenesisChroniclesNFT>
     state owner_tokens: Map<Address, List<Hash>>
     state token_count: u32
     state battle_log: List<Hash>
@@ -94,14 +94,14 @@ contract ShivamonContract {
         let mult = self.rarity_multiplier(rarity)
         let base: u16 = 50 + generation * 5
         // Deterministic stats from DNA
-        let stats = ShivamonStats {
+        let stats = GenesisChroniclesStats {
             hp: base * mult / 100,
             attack: base * mult / 100,
             defense: base * mult / 100,
             speed: base * mult / 100,
             special: base * mult / 100,
         }
-        let nft = ShivamonNFT {
+        let nft = GenesisChroniclesNFT {
             token_id: token_id,
             name: name,
             element: element,

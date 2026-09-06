@@ -1,4 +1,4 @@
-# 📋 File Register — atc-shivamon
+# 📋 File Register — genesis-chronicles
 
 > **Auto-generiert:** 2026-08-06 | **Agent:** Aurora (MasterBrain · Base44)
 
@@ -27,14 +27,14 @@
 | `battle_system.atc` | 12 |
 | `breeding.atc` | 12 |
 | `contracts/marketplace_contract.py` | 301 |
-| `contracts/shivamon.atc` | 162 |
-| `contracts/shivamon/breeding.atc` | 6 |
-| `contracts/shivamon_contract.py` | 270 |
+| `contracts/genesis_chronicles.atc` | 162 |
+| `contracts/genesis_chronicles/breeding.atc` | 6 |
+| `contracts/genesis_chronicles_contract.py` | 270 |
 | `engine/battle_engine.py` | 147 |
 | `leaderboard.atc` | 12 |
 | `marketplace_contract.atc` | 236 |
 | `requirements.txt` | 7 |
-| `shivamon_contract.atc` | 290 |
+| `genesis_chronicles_contract.atc` | 290 |
 
 ---
 *Auto-generiert 2026-08-06 · Aurora*

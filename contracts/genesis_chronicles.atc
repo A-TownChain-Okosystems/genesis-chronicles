@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Michael Wroblewski / ShivaCore / A-TownChain-Okosystems. All Rights Reserved.
 // ╔══════════════════════════════════════════════════════╗
-// ║  Shivamon NFT — ATC-9000 Standard                  ║
+// ║  Genesis Chronicles NFT — ATC-9000 Standard                  ║
 // ║  ATCLang v0.2.0 | Gaming NFT Ökosystem             ║
 // ╚══════════════════════════════════════════════════════╝
 
@@ -15,7 +15,7 @@ enum Rarity {
     COMMON, UNCOMMON, RARE, EPIC, LEGENDARY
 }
 
-struct ShivamonStats {
+struct GenesisChroniclesStats {
     hp:  u64,
     atk: u64,
     def: u64,
@@ -24,14 +24,14 @@ struct ShivamonStats {
     sp_def: u64,
 }
 
-struct Shivamon {
+struct Genesis Chronicles {
     token_id:  u64,
     name:      string,
     element:   Element,
     rarity:    Rarity,
     level:     u64,
     exp:       u64,
-    stats:     ShivamonStats,
+    stats:     GenesisChroniclesStats,
     dna:       bytes32,
     owner:     Address,
     for_sale:  bool,
@@ -40,9 +40,9 @@ struct Shivamon {
     losses:    u64,
 }
 
-contract ShivamonContract {
+contract GenesisChroniclesContract {
     state owner:        Address
-    state tokens:       Map<u64, Shivamon>
+    state tokens:       Map<u64, Genesis Chronicles>
     state owner_tokens: Map<Address, Vec<u64>>
     state approvals:    Map<u64, Address>
     state operators:    Map<Address, Map<Address, bool>>
@@ -55,7 +55,7 @@ contract ShivamonContract {
         emit ContractInitialized(owner_addr)
     }
 
-    // Neues Shivamon minten
+    // Neues Genesis Chronicles minten
     fn mint(
         to:      Address,
         name:    string,
@@ -82,14 +82,14 @@ contract ShivamonContract {
             Rarity::LEGENDARY => 130,
         }
 
-        let shivamon: Shivamon = Shivamon {
+        let genesis_chronicles: Genesis Chronicles = Genesis Chronicles {
             token_id: token_id,
             name:     name,
             element:  element,
             rarity:   rarity,
             level:    1,
             exp:      0,
-            stats: ShivamonStats {
+            stats: GenesisChroniclesStats {
                 hp:     base * 2,
                 atk:    base,
                 def:    base,
@@ -104,16 +104,16 @@ contract ShivamonContract {
             wins:     0,
             losses:   0,
         }
-        self.tokens[token_id] = shivamon
+        self.tokens[token_id] = genesis_chronicles
         self.owner_tokens[to].push(token_id)
-        emit ShivamonMinted(to, token_id, name, element, rarity)
+        emit Genesis ChroniclesMinted(to, token_id, name, element, rarity)
         return token_id
     }
 
     // Transfer
     fn transfer(from_: Address, to: Address, token_id: u64) -> bool {
         require(self.tokens.contains(token_id), "Token nicht gefunden")
-        let s: Shivamon = self.tokens[token_id]
+        let s: Genesis Chronicles = self.tokens[token_id]
         require(s.owner == caller || self.approvals[token_id] == caller, "Nicht berechtigt")
         require(is_valid_address(to_string(to)), "Ungültige Zieladresse")
         s.owner      = to
@@ -121,14 +121,14 @@ contract ShivamonContract {
         s.price      = 0
         self.tokens[token_id] = s
         self.owner_tokens[to].push(token_id)
-        emit ShivamonTransferred(from_, to, token_id)
+        emit Genesis ChroniclesTransferred(from_, to, token_id)
         return true
     }
 
     // Level Up
     fn level_up(token_id: u64) -> bool {
         require(self.tokens.contains(token_id), "Token nicht gefunden")
-        let s: Shivamon = self.tokens[token_id]
+        let s: Genesis Chronicles = self.tokens[token_id]
         require(s.owner == caller, "Nur Eigentümer")
         require(s.level < 100, "Max Level 100 erreicht")
         s.level = safe_add(s.level, 1)
@@ -140,7 +140,7 @@ contract ShivamonContract {
         s.stats.sp_atk = safe_add(s.stats.sp_atk, 3)
         s.stats.sp_def = safe_add(s.stats.sp_def, 3)
         self.tokens[token_id] = s
-        emit ShivamonLevelUp(token_id, s.level)
+        emit Genesis ChroniclesLevelUp(token_id, s.level)
         return true
     }
 
@@ -153,7 +153,7 @@ contract ShivamonContract {
         return self.owner_tokens[owner_]
     }
 
-    fn get_shivamon(token_id: u64) -> Shivamon {
+    fn get_genesis_chronicles(token_id: u64) -> Genesis Chronicles {
         require(self.tokens.contains(token_id), "Token nicht gefunden")
         return self.tokens[token_id]
     }

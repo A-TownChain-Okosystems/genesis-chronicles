@@ -1,12 +1,12 @@
-# setup.py — atc-shivamon
+# setup.py — genesis-chronicles
 # Copyright (c) 2026 Michael Wroblewski / ShivaCore / A-TownChain-Okosystems. All Rights Reserved.
 
 from setuptools import setup, find_packages
 
 setup(
-    name="atc-shivamon",
+    name="genesis-chronicles",
     version="0.1.0",
-    description="ShivaMon — NFT monster battle game",
+    description="Genesis Chronicles — NFT monster battle game",
     author="Michael Wroblewski / ShivaCore / A-TownChain-Okosystems",
     license="All Rights Reserved",
     packages=find_packages(where="src"),

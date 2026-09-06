@@ -1,9 +1,9 @@
 # Copyright (c) 2026 Michael Wroblewski / ShivaCore / A-TownChain-Okosystems. All Rights Reserved.
-# blockchain/contracts/shivamon/shivamon_contract.py
-# Shivamon NFT Contract — ATC-9000 Standard
+# blockchain/contracts/genesis_chronicles/genesis_chronicles_contract.py
+# Genesis Chronicles NFT Contract — ATC-9000 Standard
 #
-# Shivamon sind NFT-Battle-Kreaturen im A-TownChain Ökosystem.
-# Jedes Shivamon ist einzigartig (NFT) mit:
+# Genesis Chronicles sind NFT-Battle-Kreaturen im A-TownChain Ökosystem.
+# Jedes Genesis Chronicles ist einzigartig (NFT) mit:
 #   - Element (Feuer/Wasser/Erde/Luft/Shadow/Neon/Quantum)
 #   - Stats (HP, Attack, Defense, Speed, Special)
 #   - Rarity (Common → Legendary → Genesis)
@@ -37,7 +37,7 @@ RARITY_MULTIPLIER = {
 }
 
 @dataclass
-class ShivamonStats:
+class GenesisChroniclesStats:
     hp:      int
     attack:  int
     defense: int
@@ -47,8 +47,8 @@ class ShivamonStats:
     def total(self):
         return self.hp + self.attack + self.defense + self.speed + self.special
 
-class ShivamonNFT:
-    """Ein einzelnes Shivamon NFT."""
+class GenesisChroniclesNFT:
+    """Ein einzelnes Genesis Chronicles NFT."""
 
     def __init__(self, token_id: str, name: str, element: Element,
                  rarity: Rarity, owner: str, generation: int = 1):
@@ -71,12 +71,12 @@ class ShivamonNFT:
         seed = f"{self.token_id}{self.name}{self.element.value}{time.time()}"
         return hashlib.sha256(seed.encode()).hexdigest()
 
-    def _generate_stats(self) -> ShivamonStats:
+    def _generate_stats(self) -> GenesisChroniclesStats:
         # Deterministische Stats aus DNA
         dna_int = int(self.dna_hash, 16)
         mult    = RARITY_MULTIPLIER[self.rarity.value]
         base    = 50 + (self.generation * 5)
-        return ShivamonStats(
+        return GenesisChroniclesStats(
             hp      = int(base * mult * ((dna_int >> 0  & 0xFF) / 128 + 0.5)),
             attack  = int(base * mult * ((dna_int >> 8  & 0xFF) / 128 + 0.5)),
             defense = int(base * mult * ((dna_int >> 16 & 0xFF) / 128 + 0.5)),
@@ -131,13 +131,13 @@ class ShivamonNFT:
         }
 
 
-class ShivamonContract:
+class GenesisChroniclesContract:
     """
-    ATC-9000 Smart Contract — Shivamon NFT Registry.
+    ATC-9000 Smart Contract — Genesis Chronicles NFT Registry.
     Verwaltet Mint, Transfer, Battle, Breeding.
     """
 
-    # Bekannte Shivamon-Namen nach Element
+    # Bekannte Genesis Chronicles-Namen nach Element
     NAMES = {
         "Fire":    ["Ignarex","Pyrodon","Flamecor","Embrix","Volcanix"],
         "Water":   ["Aquarix","Tideon","Glacivex","Hydrox","Torrento"],
@@ -150,7 +150,7 @@ class ShivamonContract:
     MAX_SUPPLY = 9900  # ATC-9900 kompatibel
 
     def __init__(self):
-        self.tokens         = {}   # token_id → ShivamonNFT
+        self.tokens         = {}   # token_id → GenesisChroniclesNFT
         self.owner_tokens   = {}   # owner → [token_ids]
         self.total_minted   = 0
         self.battle_log     = []
@@ -176,7 +176,7 @@ class ShivamonContract:
 
         # Name
         el_key = el_name
-        names  = self.NAMES.get(el_key, ["Shivamon"])
+        names  = self.NAMES.get(el_key, ["Genesis Chronicles"])
         name   = random.choice(names) + f"-{self.total_minted+1:04d}"
 
         # Token ID
@@ -184,14 +184,14 @@ class ShivamonContract:
             f"{owner}{name}{time.time()}".encode()
         ).hexdigest()[:12].upper()
 
-        nft = ShivamonNFT(token_id, name, el, rar, owner, generation)
+        nft = GenesisChroniclesNFT(token_id, name, el, rar, owner, generation)
         self.tokens[token_id]  = nft
         if owner not in self.owner_tokens:
             self.owner_tokens[owner] = []
         self.owner_tokens[owner].append(token_id)
         self.total_minted += 1
 
-        return {"success": True, "shivamon": nft.to_dict()}
+        return {"success": True, "genesis_chronicles": nft.to_dict()}
 
     # ── Transfer ───────────────────────────────────────
     def transfer(self, token_id: str, from_addr: str, to_addr: str) -> dict:

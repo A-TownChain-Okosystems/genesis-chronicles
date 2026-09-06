@@ -1,6 +1,6 @@
-# shivamon
+# genesis-chronicles
 
-> Game als eigenes Produkt - Engine (genesis-engine) und Spiel (shivamon) bleiben getrennt.
+> Game als eigenes Produkt - Engine (genesis-engine) und Spiel (Genesis Chronicles) bleiben getrennt.
 
 **Prioritaet:** P1 (Repository-Landkarte AD-024) | **Chain-ID:** 658467 (AD-004) | **Org:** [A-TownChain-Okosystems](https://github.com/A-TownChain-Okosystems)
 
@@ -17,7 +17,7 @@
 ```
 genesis-engine (Technologie: Engine)
     v  ECS/World/Combat-Kern
-shivamon (Produkt: Game)
+genesis_chronicles (Produkt: Game)
     +-- World - Combat - PvP/PvE
     +-- Guilds - NFT (ATC-9000)
     +-- GameFi (atc-wallet/atc-marketplace-Anbindung)

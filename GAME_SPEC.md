@@ -1,4 +1,4 @@
-# Shivamon — Game Specification v2.1.0
+# Genesis Chronicles — Game Specification v2.1.0
 
 ## NFT-Attribute (ATC-9000)
 - `token_id`: u64 (unique, auto-increment)

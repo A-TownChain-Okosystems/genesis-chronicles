@@ -2,7 +2,7 @@
 // ─────────────────────────────────────────────────────────────
 // ATC-90 — NFT Marketplace Contract
 // Sprint 2.5 | Smart Contract Layer | Chain-ID 658467
-// Migrated from: modules/shivamon/contracts/marketplace_contract.py (300 lines)
+// Migrated from: modules/genesis_chronicles/contracts/marketplace_contract.py (300 lines)
 // NFT trading: list, buy, cancel, offers, 2.5% royalty, 1% platform fee
 // ─────────────────────────────────────────────────────────────
 
@@ -122,7 +122,7 @@ contract MarketplaceContract {
         let platform_fee = listing.price * PLATFORM_FEE_BPS / 10000
         let seller_proceeds = listing.price - royalty - platform_fee
         // Transfer NFT
-        ShivamonContract::transfer(listing.token_id, buyer)
+        GenesisChroniclesContract::transfer(listing.token_id, buyer)
         // Transfer ATC
         ATCoin::transfer(buyer, listing.seller, seller_proceeds)
         listing.status = ListingStatus::Sold
@@ -196,12 +196,12 @@ contract MarketplaceContract {
             return false
         }
         // Verify caller owns the token via ownership check
-        let is_owner = ShivamonContract::is_token_owner(offer.token_id, msg_sender())
+        let is_owner = GenesisChroniclesContract::is_token_owner(offer.token_id, msg_sender())
         if !is_owner {
             return false
         }
         // Transfer NFT and ATC
-        ShivamonContract::transfer(offer.token_id, offer.buyer)
+        GenesisChroniclesContract::transfer(offer.token_id, offer.buyer)
         ATCoin::transfer(offer.buyer, msg_sender(), offer.offer_price)
         offer.active = false
         self.total_volume += offer.offer_price

@@ -1,4 +1,4 @@
-# 📊 Status — atc-shivamon
+# 📊 Status — genesis-chronicles
 
 > **Stand:** 2026-08-05 04:02 UTC
 > **Version:** v1.0.0

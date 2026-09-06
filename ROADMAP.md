@@ -1,7 +1,7 @@
-# 🗺️ Roadmap — atc-shivamon
+# 🗺️ Roadmap — genesis-chronicles
 
 > **Projekt:** A-TownChain OS / KAI-OS · v1.0.0
-> **Repo:** `atc-shivamon`
+> **Repo:** `genesis-chronicles`
 > **Stand:** 2026-08-05
 
 ---
