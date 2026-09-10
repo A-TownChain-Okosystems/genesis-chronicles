@@ -7,7 +7,7 @@ Genesis Chronicles — NFT-Spiel (AD-025, ehemals Shivamon) auf Genesis Engine +
 
 **Module:** atc-shivamon, atc-game
 
-**Meile (AD-027):** M7 — Spiel laeuft: Spiel-Loop + NFT-Mint als Chain-Transaktion
+**Meile (AD-027):** M7 CLAIMED — Evidence incomplete (Game Loop + NFT-Mint-TX reproduzierbar nachweisen, SCR-0073): Spiel-Loop + NFT-Mint als Chain-Transaktion
 
 **Hinweis:** Basis fuer den Rebuild; Gate-Kriterien laut LAUFFAEHIGKEITS_ROADMAP
 (a-townchain-os-docs/docs/roadmap/).
