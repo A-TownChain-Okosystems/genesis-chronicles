@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 description = "On-Chain Game Engine — Genesis Engine + Blockchain Assets"
 authors = ["Michael Wroblewski"]
-license = "ALL RIGHTS RESERVED"
+license = "Apache-2.0"
 
 [dependencies]
