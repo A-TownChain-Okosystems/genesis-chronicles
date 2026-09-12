@@ -1,6 +1,8 @@
 # genesis-chronicles [L6]
 
-Genesis Chronicles — NFT-Spiel (AD-025, ehemals Shivamon) auf Genesis Engine + ATC-9000-NFTs.
+Genesis Chronicles — **Premium-Flagship-/Reference-Game** auf ATC Genesis Engine (Rollenverteilung gemäß [GEN-PROD-001](https://github.com/A-TownChain-Okosystems/genesis-engine/blob/main/docs/specs/GEN-PROD-001-PRODUCT-STRATEGY.md), SPEC-DRAFT) + ATC-9000-NFTs. AD-025, ehemals Shivamon.
+
+> Die Engine entwickelt die Technologie — dieses Spiel zeigt, was sie leisten kann. Spielspezifische Logik (Contracts, Battle, Breeding, NFT-Mint) bleibt in diesem Repo; generische Features laufen über das Feature-Promotion-Gate in die Engine.
 
 **Vault-Restauration (07.09.2026, AD-020/026/027):** Inhalt aus dem Wiki-Vault
 (docs/archive/monorepo-full/) restauriert — vor der Repo-Leerung byte-identisch gesichert. AD-025-Korrektur angewendet: Shivamon-Bezeichner in Genesis Chronicles umbenannt (Contract-IDs, Modul-Dir).
@@ -19,7 +21,7 @@ Genesis Chronicles — NFT-Spiel (AD-025, ehemals Shivamon) auf Genesis Engine +
 **ATC COMPLIANCE: R2** — auditiert am 2026-09-07 (atc-repo-audit; R-Level aus `.atc/repository.yaml`).
 Architekturentscheidungen: zentral im [DECISIONS_REGISTER](https://github.com/A-TownChain-Okosystems/a-townchain-os-docs/blob/main/docs/DECISIONS_REGISTER.md) (AD-Nummern verbindlich; lokale Entscheidungen in `docs/decisions/`).
 
-- **Purpose:** Genesis Chronicles (vormals Shivamon, AD-025) — das Spiel (L6).
+- **Purpose:** Genesis Chronicles (vormals Shivamon, AD-025) — das Spiel (L6); Premium-Flagship-/Reference-Game auf ATC Genesis Engine.
 - **Scope:** Layer L6, Domain game — genesis-chronicles als GAME in der 23-Repo-Landschaft (AD-024/026).
 - **Architecture:** Genesis-Engine-Integration; NFTs per ATC-9000 auf Chain-ID 658467.
 - **Features:** Spiel-Module; 20 Dateien AD-025-konform umbenannt.
