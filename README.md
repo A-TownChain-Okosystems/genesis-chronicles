@@ -1,34 +1,197 @@
-# genesis-chronicles [L6]
+# Genesis Chronicles
 
-Genesis Chronicles — **Premium-Flagship-/Reference-Game** auf ATC Genesis Engine (Rollenverteilung gemäß [GEN-PROD-001](https://github.com/A-TownChain-Okosystems/genesis-engine/blob/main/docs/specs/GEN-PROD-001-PRODUCT-STRATEGY.md), SPEC-DRAFT) + ATC-9000-NFTs. AD-025, ehemals Shivamon.
+> Premium-Flagship-/Reference-Game auf der ATC Genesis Engine. Das Spiel demonstriert die Fähigkeiten der Engine; spielspezifische Logik bleibt in diesem Repository.
 
-> Die Engine entwickelt die Technologie — dieses Spiel zeigt, was sie leisten kann. Spielspezifische Logik (Contracts, Battle, Breeding, NFT-Mint) bleibt in diesem Repo; generische Features laufen über das Feature-Promotion-Gate in die Engine.
+**Project:** `genesis-chronicles`  
+**Organization:** `A-TownChain-Okosystems`  
+**Status:** `development`  
+**Version:** siehe `CHANGELOG.md` / Repository-Metadaten  
+**License:** `Apache-2.0`
 
-**Vault-Restauration (07.09.2026, AD-020/026/027):** Inhalt aus dem Wiki-Vault
-(docs/archive/monorepo-full/) restauriert — vor der Repo-Leerung byte-identisch gesichert. AD-025-Korrektur angewendet: Shivamon-Bezeichner in Genesis Chronicles umbenannt (Contract-IDs, Modul-Dir).
+## Overview
 
-**Module:** atc-shivamon, atc-game
+Genesis Chronicles ist das Referenzspiel auf `genesis-engine`. Es nutzt die generischen Engine-Funktionen, ergänzt diese aber um spielspezifische Systeme wie Gameplay, Battle, Breeding und NFT-Minting.
 
-**Meile (AD-027):** M7 CLAIMED — Evidence incomplete (Game Loop + NFT-Mint-TX reproduzierbar nachweisen, SCR-0073): Spiel-Loop + NFT-Mint als Chain-Transaktion
+Das Repository hieß historisch `shivamon`. Die Migration zu Genesis Chronicles ist eine kontrollierte Namensänderung; historische Bezeichner und IDs werden nicht stillschweigend neu nummeriert.
 
-**Hinweis:** Basis fuer den Rebuild; Gate-Kriterien laut LAUFFAEHIGKEITS_ROADMAP
-(a-townchain-os-docs/docs/roadmap/).
+Die Engine-/Game-Grenze ist verbindlich:
 
----
+- **Genesis Engine:** generische Game-Development-Technologie
+- **Genesis Chronicles:** konkrete Spiel- und Produktlogik
+- **A-TownChain / ATC-VM:** Chain-seitige Ausführung und deterministische Zustandsübergänge
+- **ShivaCore:** Kernel-/Capability-Basis, nicht Game-Logik
 
-## ATC Compliance & Governance (ATC-STD-201 / 202 / 203)
+## Purpose
 
-**ATC COMPLIANCE: R2** — auditiert am 2026-09-07 (atc-repo-audit; R-Level aus `.atc/repository.yaml`).
-Architekturentscheidungen: zentral im [DECISIONS_REGISTER](https://github.com/A-TownChain-Okosystems/a-townchain-os-docs/blob/main/docs/DECISIONS_REGISTER.md) (AD-Nummern verbindlich; lokale Entscheidungen in `docs/decisions/`).
+Genesis Chronicles ist das Premium-Flagship-/Reference-Game und dient als konkrete Referenzimplementierung für die Genesis Engine.
 
-- **Purpose:** Genesis Chronicles (vormals Shivamon, AD-025) — das Spiel (L6); Premium-Flagship-/Reference-Game auf ATC Genesis Engine.
-- **Scope:** Layer L6, Domain game — genesis-chronicles als GAME in der 23-Repo-Landschaft (AD-024/026).
-- **Architecture:** Genesis-Engine-Integration; NFTs per ATC-9000 auf Chain-ID 658467.
-- **Features:** Spiel-Module; 20 Dateien AD-025-konform umbenannt.
-- **Installation:** Modul-Build je Sprache (rust); Integration via Monorepo-Workspace (a-townchain-os, sync_modules.py).
-- **Development:** Conventional Commits; Governance-Regeln aus atc-standards; Naming gemaess ATC-STD-000 §7.
-- **Testing:** Spiel-Gate M7: NFT auf Chain.
-- **Security:** SECURITY.md; S-Klasse S1; ATC-STD-203 Release-Gates; Emergency-Prozess ATC-STD-000 §32.
-- **Roadmap:** Einordnung in die Lauffaehigkeits-Roadmap M1-M8 (AD-027) und Bauhierarchie L0-L7 (AD-026).
-- **Version:** CHANGELOG.md; SemVer; Releases als ATC-REL-X.Y.Z.
-- **License:** Apache-2.0 — Apache-2.0, Michael Wroblewski / ShivaCore / A-TownChain-Okosystems (ATC-LIC/ATS-LIC).
+Verantwortlichkeiten dieses Repositories umfassen insbesondere:
+
+- Spiel-Loop und Gameplay-Systeme
+- Battle- und Creature-/Breeding-Logik, soweit spielspezifisch
+- NFT-bezogene Spielintegration und Mint-Transaktionen
+- Integration der generischen `genesis-engine`-Module
+- Referenzimplementierung für die Engine-Produktstrategie
+
+Generische Engine-Funktionen werden nicht dauerhaft in diesem Repository dupliziert. Neue generische Features durchlaufen das definierte Feature-Promotion-Gate der Genesis Engine.
+
+## Status
+
+**Status:** `development` — Rebuild-Basis. Der dokumentierte M7-Meilenstein ist ein Entwicklungsziel und darf nicht mit `APPROVED`, `AUDITED` oder `PRODUCTION_READY` gleichgesetzt werden.
+
+Die tatsächliche Readiness wird anhand reproduzierbarer Evidence, Tests und der geltenden Release-Gates festgestellt. Ein deklarierter Meilenstein oder ein Audit-Maturity-Level allein ist kein Production-Release.
+
+## Architecture
+
+### Components
+
+- `atc-shivamon` — historischer bzw. bestehender Modulname im Repository-Kontext; bei weiteren Umbenennungen sind Legacy-Referenzen zu erhalten.
+- `atc-game` — spielspezifische Game-Funktionalität.
+- `genesis-engine` — externe generische Engine-Abhängigkeit für Engine- und Simulationsfunktionen.
+
+### Data Flow
+
+```text
+Player / Game Events
+        ↓
+Game Systems
+        ↓
+Genesis Engine / ECS
+        ↓
+Game State
+        ↓
+Chain Integration (falls erforderlich)
+        ↓
+A-TownChain / ATC-VM
+```
+
+### Chain Boundary
+
+On-Chain-Funktionen werden nicht durch die Game-Engine ersetzt. ATCLang und ATC-VM bilden die definierte Ausführungsgrenze für Chain-seitige Logik; Rust-basierte Infrastruktur trägt die Chain-Komponenten. Das Spiel integriert diese Systeme über explizite Schnittstellen.
+
+### Chain Identity
+
+Für Chain-Interaktionen ist ausschließlich die kanonische Chain-Identity-/Network-Konfiguration des jeweiligen Zielnetzwerks maßgeblich. Chain IDs dürfen nicht aus historischen README-Angaben oder impliziten Defaults abgeleitet werden.
+
+## Features
+
+- Premium-Flagship-/Reference-Game für Genesis Engine
+- Spiel- und Simulationsintegration
+- Spielspezifische Gameplay-Systeme
+- NFT-/Chain-Integration
+- Vorbereitung auf reproduzierbare Game-State- und Mint-Transaktionsnachweise
+
+## Repository Structure
+
+```text
+/
+├── docs/          # Dokumentation und Entscheidungen
+├── modules/       # Game-Module
+│   ├── atc-shivamon
+│   └── atc-game
+├── CHANGELOG.md
+├── ROADMAP.md
+├── STATUS.md
+└── README.md
+```
+
+Historische `shivamon`-Referenzen sind bei Migrationen kontrolliert zu behandeln und dürfen nicht ohne Governance-Entscheidung entfernt oder umnummeriert werden.
+
+## Requirements
+
+- Rust/Cargo gemäß den Workspace-Anforderungen
+- Git >= 2.30
+- Weitere Anforderungen entsprechend den jeweiligen Modulen und der Engine-Integration
+
+## Installation
+
+```bash
+git clone https://github.com/A-TownChain-Okosystems/genesis-chronicles.git
+cd genesis-chronicles
+cargo build --workspace
+```
+
+## Usage
+
+Der konkrete Start-/Spiel-Workflow wird durch die aktuellen Module und `STATUS.md` bzw. `ROADMAP.md` definiert. Für einen reproduzierbaren Entwicklungscheck:
+
+```bash
+cargo test --workspace
+```
+
+## Development
+
+Entwicklung erfolgt nach den geltenden A-TownChain-Governance- und Repository-Standards. Commits müssen dem Conventional-Commit-Modell entsprechen.
+
+Spielspezifische Änderungen bleiben in diesem Repository. Änderungen, die generische Engine-Funktionalität betreffen, müssen gegen die Genesis-Engine-Produktstrategie geprüft werden.
+
+## Testing
+
+```bash
+cargo test --workspace
+```
+
+Für Chain-/NFT-Funktionen sind zusätzlich reproduzierbare Evidence für die relevanten Transaktionen und Zustandsübergänge erforderlich.
+
+## Security
+
+Sicherheitslücken dürfen nicht öffentlich über GitHub Issues gemeldet werden. Bitte den Security-Reporting-Prozess aus `SECURITY.md` verwenden.
+
+## Documentation
+
+- `STATUS.md` — aktueller Entwicklungsstatus
+- `ROADMAP.md` — Entwicklungs-Roadmap
+- `CHANGELOG.md` — Änderungen und Releases
+- `docs/` — technische Dokumentation und Entscheidungen
+- `genesis-engine` — generische Engine-Dokumentation
+- `a-townchain-os-docs` — zentrale Ökosystem-Dokumentation
+
+## Governance
+
+Das Repository folgt dem A-TownChain-Governance-Modell. Architektur-, Sicherheits- und Release-Entscheidungen müssen den vorgesehenen Review- und Approval-Prozess durchlaufen.
+
+Canonical Standard-IDs werden ausschließlich über die Standards Registry und den Governance-Prozess vergeben. Die aktuelle Taxonomie verwendet Family-scoped IDs der Form `ATC-STD-Fxx-yyy`; Legacy-IDs bleiben historisch erhalten und werden nicht stillschweigend umnummeriert.
+
+## Standards & Compliance
+
+Relevante Governance-Grundlagen umfassen insbesondere:
+
+| Standard | Version | Verwendung |
+|---|---:|---|
+| ATC-STD-000 | 1.3.0 | Governance Root |
+| ATC-STD-README-001 | 1.0.0 | README-Struktur und Metadaten |
+| ATC-STD-MD-001 | 1.0.0 | Markdown-Konformität |
+| ATC-STD-203 | 1.0.1 | Security und Release Gates |
+
+Diese Referenzen dokumentieren die anzuwendenden Governance-Grundlagen und stellen keine pauschale `PRODUCTION_READY`-Behauptung dar.
+
+## Roadmap
+
+Kanonische Quellen:
+
+- `ROADMAP.md`
+- `STATUS.md`
+- zentrale Roadmap in `a-townchain-os-docs`
+- GitHub Issues & Projects
+
+## Contributing
+
+Beiträge erfolgen über den definierten ATC-Governance-Prozess. Relevante Tests und Validatoren müssen vor einem Merge erfolgreich sein.
+
+## License
+
+Apache-2.0 — A-TownChain-Okosystems. Details siehe [`LICENSE`](LICENSE).
+
+## Maintainers
+
+**Organization:** A-TownChain-Okosystems
+
+## AI Agent Instructions
+
+Für KI-Agenten:
+
+1. Lies `STATUS.md`, `ROADMAP.md`, `ARCHITECTURE.md` (falls vorhanden) und relevante Governance-Dokumente vor größeren Änderungen.
+2. Beachte die Engine-/Game-Grenze.
+3. Verwende Conventional Commits.
+4. Führe `cargo test --workspace` und die relevanten Validatoren aus.
+5. Behaupte `AUDITED`, `APPROVED` oder `PRODUCTION_READY` nur bei vorhandener, autoritativer Evidence.
