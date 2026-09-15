@@ -11,52 +11,54 @@ Features:
   - get_listings: Aktive Listings filtern + sortieren
   - Preis-Orakel: ATC/USD Referenz
 """
-import time, hashlib
-from dataclasses import dataclass, field
+
+import hashlib
+import time
+from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+
 from blockchain.contracts.base.base_contract import BaseContract
 
 
 class ListingStatus(Enum):
-    ACTIVE    = "ACTIVE"
-    SOLD      = "SOLD"
+    ACTIVE = "ACTIVE"
+    SOLD = "SOLD"
     CANCELLED = "CANCELLED"
-    EXPIRED   = "EXPIRED"
+    EXPIRED = "EXPIRED"
 
 
 @dataclass
 class Listing:
-    listing_id:   str
-    token_id:     str           # Genesis Chronicles Token-ID
-    seller:       str           # ATC-Adresse
-    price_atc:    float         # Verkaufspreis in ATC
-    rarity:       str           # Common/Rare/Epic/Legendary/Genesis
-    element:      str           # Fire/Water/Earth/Air/Shadow/Neon/Quantum
-    level:        int
-    name:         str
-    created_at:   int
-    expires_at:   int           # Auto-Expire nach 30 Tagen
-    status:       str = "ACTIVE"
-    buyer:        str = ""
-    sold_at:      int = 0
-    sold_price:   float = 0.0
+    listing_id: str
+    token_id: str  # Genesis Chronicles Token-ID
+    seller: str  # ATC-Adresse
+    price_atc: float  # Verkaufspreis in ATC
+    rarity: str  # Common/Rare/Epic/Legendary/Genesis
+    element: str  # Fire/Water/Earth/Air/Shadow/Neon/Quantum
+    level: int
+    name: str
+    created_at: int
+    expires_at: int  # Auto-Expire nach 30 Tagen
+    status: str = "ACTIVE"
+    buyer: str = ""
+    sold_at: int = 0
+    sold_price: float = 0.0
 
     def to_dict(self):
         return {
             "listing_id": self.listing_id,
-            "token_id":   self.token_id,
-            "seller":     self.seller,
-            "price_atc":  self.price_atc,
-            "rarity":     self.rarity,
-            "element":    self.element,
-            "level":      self.level,
-            "name":       self.name,
+            "token_id": self.token_id,
+            "seller": self.seller,
+            "price_atc": self.price_atc,
+            "rarity": self.rarity,
+            "element": self.element,
+            "level": self.level,
+            "name": self.name,
             "created_at": self.created_at,
             "expires_at": self.expires_at,
-            "status":     self.status,
-            "buyer":      self.buyer,
-            "sold_at":    self.sold_at,
+            "status": self.status,
+            "buyer": self.buyer,
+            "sold_at": self.sold_at,
         }
 
 
@@ -67,17 +69,17 @@ class MarketplaceContract(BaseContract):
     Platform-Fee: 1% → Treasury
     """
 
-    ROYALTY_PERCENT  = 2.5    # 2.5% → Genesis Chronicles Creator
-    PLATFORM_PERCENT = 1.0    # 1.0% → Treasury/Owner
-    LISTING_TTL      = 30 * 24 * 3600   # 30 Tage Auto-Expire
+    ROYALTY_PERCENT = 2.5  # 2.5% → Genesis Chronicles Creator
+    PLATFORM_PERCENT = 1.0  # 1.0% → Treasury/Owner
+    LISTING_TTL = 30 * 24 * 3600  # 30 Tage Auto-Expire
 
     def __init__(self, owner: str):
         super().__init__(owner, contract_id="ATC_MARKETPLACE")
-        self.listings:      dict[str, Listing] = {}   # listing_id → Listing
-        self.token_listing: dict[str, str]     = {}   # token_id → listing_id
-        self.sales_history: list[dict]         = []
-        self._atc_balances: dict[str, float]   = {}
-        self._nft_contract  = None   # GenesisChroniclesContract-Referenz
+        self.listings: dict[str, Listing] = {}  # listing_id → Listing
+        self.token_listing: dict[str, str] = {}  # token_id → listing_id
+        self.sales_history: list[dict] = []
+        self._atc_balances: dict[str, float] = {}
+        self._nft_contract = None  # GenesisChroniclesContract-Referenz
 
     # ── Integration ────────────────────────────────────
     def set_token_contract(self, nft_contract):
@@ -90,9 +92,7 @@ class MarketplaceContract(BaseContract):
 
     # ── Listing erstellen ──────────────────────────────
     def list_for_sale(
-        self, seller: str, token_id: str,
-        price_atc: float,
-        nft_meta: dict = None
+        self, seller: str, token_id: str, price_atc: float, nft_meta: dict = None
     ) -> dict:
         """Listet ein Genesis Chronicles-NFT zum Verkauf auf."""
         self.when_not_paused()
@@ -115,36 +115,31 @@ class MarketplaceContract(BaseContract):
             meta = nft_meta or {}
 
         now = int(time.time())
-        lid = "LIST-" + hashlib.sha256(
-            f"{seller}{token_id}{now}".encode()
-        ).hexdigest()[:10].upper()
+        lid = "LIST-" + hashlib.sha256(f"{seller}{token_id}{now}".encode()).hexdigest()[:10].upper()
 
         listing = Listing(
-            listing_id = lid,
-            token_id   = token_id,
-            seller     = seller,
-            price_atc  = price_atc,
-            rarity     = meta.get("rarity", "Unknown"),
-            element    = meta.get("element", "Unknown"),
-            level      = meta.get("level", 1),
-            name       = meta.get("name", token_id),
-            created_at = now,
-            expires_at = now + self.LISTING_TTL,
+            listing_id=lid,
+            token_id=token_id,
+            seller=seller,
+            price_atc=price_atc,
+            rarity=meta.get("rarity", "Unknown"),
+            element=meta.get("element", "Unknown"),
+            level=meta.get("level", 1),
+            name=meta.get("name", token_id),
+            created_at=now,
+            expires_at=now + self.LISTING_TTL,
         )
 
-        self.listings[lid]           = listing
+        self.listings[lid] = listing
         self.token_listing[token_id] = lid
-        self._emit("Listed", {
-            "listing_id": lid, "token_id": token_id,
-            "seller": seller, "price_atc": price_atc
-        })
+        self._emit(
+            "Listed",
+            {"listing_id": lid, "token_id": token_id, "seller": seller, "price_atc": price_atc},
+        )
         return {"success": True, "listing": listing.to_dict()}
 
     # ── Kaufen ─────────────────────────────────────────
-    def buy(
-        self, buyer: str, listing_id: str,
-        atc_balances: dict = None
-    ) -> dict:
+    def buy(self, buyer: str, listing_id: str, atc_balances: dict = None) -> dict:
         """Kauft ein gelistetes NFT. ATC wird transferiert."""
         self.when_not_paused()
         listing = self._get_active_listing(listing_id)
@@ -160,16 +155,16 @@ class MarketplaceContract(BaseContract):
             )
 
         # Gebühren berechnen
-        royalty      = listing.price_atc * (self.ROYALTY_PERCENT / 100)
+        royalty = listing.price_atc * (self.ROYALTY_PERCENT / 100)
         platform_fee = listing.price_atc * (self.PLATFORM_PERCENT / 100)
-        seller_gets  = listing.price_atc - royalty - platform_fee
+        seller_gets = listing.price_atc - royalty - platform_fee
 
         # Balances updaten
-        balances[buyer]               = buyer_balance - listing.price_atc
-        balances[listing.seller]      = balances.get(listing.seller, 0.0) + seller_gets
-        balances[self.owner]          = balances.get(self.owner, 0.0) + platform_fee
+        balances[buyer] = buyer_balance - listing.price_atc
+        balances[listing.seller] = balances.get(listing.seller, 0.0) + seller_gets
+        balances[self.owner] = balances.get(self.owner, 0.0) + platform_fee
         # Royalty → Contract-Owner (= ursprünglicher Genesis Chronicles-Creator)
-        balances["ROYALTY_TREASURY"]  = balances.get("ROYALTY_TREASURY", 0.0) + royalty
+        balances["ROYALTY_TREASURY"] = balances.get("ROYALTY_TREASURY", 0.0) + royalty
 
         # NFT transferieren
         if self._nft_contract:
@@ -177,21 +172,21 @@ class MarketplaceContract(BaseContract):
 
         # Listing abschließen
         now = int(time.time())
-        listing.status     = ListingStatus.SOLD.value
-        listing.buyer      = buyer
-        listing.sold_at    = now
+        listing.status = ListingStatus.SOLD.value
+        listing.buyer = buyer
+        listing.sold_at = now
         listing.sold_price = listing.price_atc
 
         sale = {
-            "listing_id":   listing_id,
-            "token_id":     listing.token_id,
-            "seller":       listing.seller,
-            "buyer":        buyer,
-            "price_atc":    listing.price_atc,
-            "seller_gets":  seller_gets,
-            "royalty":      royalty,
+            "listing_id": listing_id,
+            "token_id": listing.token_id,
+            "seller": listing.seller,
+            "buyer": buyer,
+            "price_atc": listing.price_atc,
+            "seller_gets": seller_gets,
+            "royalty": royalty,
             "platform_fee": platform_fee,
-            "sold_at":      now,
+            "sold_at": now,
         }
         self.sales_history.append(sale)
         self._emit("Sold", sale)
@@ -209,10 +204,10 @@ class MarketplaceContract(BaseContract):
             raise PermissionError("Nur Seller oder Contract-Owner können canceln")
 
         listing.status = ListingStatus.CANCELLED.value
-        self._emit("ListingCancelled", {
-            "listing_id": listing_id, "token_id": listing.token_id,
-            "cancelled_by": seller
-        })
+        self._emit(
+            "ListingCancelled",
+            {"listing_id": listing_id, "token_id": listing.token_id, "cancelled_by": seller},
+        )
         return {"success": True, "listing_id": listing_id}
 
     # ── Queries ────────────────────────────────────────
@@ -223,30 +218,37 @@ class MarketplaceContract(BaseContract):
         min_price: float = None,
         max_price: float = None,
         sort_by: str = "price_asc",  # price_asc|price_desc|newest|rarity
-        limit: int = 50
+        limit: int = 50,
     ) -> list:
         """Gibt aktive Listings zurück — gefiltert + sortiert."""
         now = int(time.time())
         results = []
 
-        for l in self.listings.values():
-            if l.status != ListingStatus.ACTIVE.value:
+        for ln in self.listings.values():
+            if ln.status != ListingStatus.ACTIVE.value:
                 continue
-            if l.expires_at < now:
-                l.status = ListingStatus.EXPIRED.value
+            if ln.expires_at < now:
+                ln.status = ListingStatus.EXPIRED.value
                 continue
-            if rarity  and l.rarity != rarity:
+            if rarity and ln.rarity != rarity:
                 continue
-            if element and l.element.split(" ")[-1] != element:
+            if element and ln.element.split(" ")[-1] != element:
                 continue
-            if min_price and l.price_atc < min_price:
+            if min_price and ln.price_atc < min_price:
                 continue
-            if max_price and l.price_atc > max_price:
+            if max_price and ln.price_atc > max_price:
                 continue
-            results.append(l)
+            results.append(ln)
 
         # Sortierung
-        RARITY_RANK = {"Common":1,"Uncommon":2,"Rare":3,"Epic":4,"Legendary":5,"Genesis":6}
+        RARITY_RANK = {
+            "Common": 1,
+            "Uncommon": 2,
+            "Rare": 3,
+            "Epic": 4,
+            "Legendary": 5,
+            "Genesis": 6,
+        }
         if sort_by == "price_asc":
             results.sort(key=lambda x: x.price_atc)
         elif sort_by == "price_desc":
@@ -256,11 +258,11 @@ class MarketplaceContract(BaseContract):
         elif sort_by == "rarity":
             results.sort(key=lambda x: RARITY_RANK.get(x.rarity, 0), reverse=True)
 
-        return [l.to_dict() for l in results[:limit]]
+        return [ln.to_dict() for ln in results[:limit]]
 
     def get_listing(self, listing_id: str) -> dict:
-        l = self.listings.get(listing_id)
-        return l.to_dict() if l else {"error": "Nicht gefunden"}
+        ln = self.listings.get(listing_id)
+        return ln.to_dict() if ln else {"error": "Nicht gefunden"}
 
     def get_token_listing(self, token_id: str) -> dict:
         lid = self.token_listing.get(token_id)
@@ -275,27 +277,27 @@ class MarketplaceContract(BaseContract):
         return sorted(history, key=lambda x: x["sold_at"], reverse=True)[:limit]
 
     def get_stats(self) -> dict:
-        active = sum(1 for l in self.listings.values() if l.status == "ACTIVE")
-        sold   = sum(1 for l in self.listings.values() if l.status == "SOLD")
+        active = sum(1 for ln in self.listings.values() if ln.status == "ACTIVE")
+        sold = sum(1 for ln in self.listings.values() if ln.status == "SOLD")
         total_volume = sum(s["price_atc"] for s in self.sales_history)
         return {
             "active_listings": active,
-            "total_sold":      sold,
-            "total_listings":  len(self.listings),
+            "total_sold": sold,
+            "total_listings": len(self.listings),
             "total_volume_atc": total_volume,
             "royalty_percent": self.ROYALTY_PERCENT,
             "platform_fee_percent": self.PLATFORM_PERCENT,
-            "standard": "ATC-9000 Marketplace"
+            "standard": "ATC-9000 Marketplace",
         }
 
     # ── Helper ─────────────────────────────────────────
     def _get_active_listing(self, listing_id: str) -> Listing:
-        l = self.listings.get(listing_id)
-        if not l:
+        ln = self.listings.get(listing_id)
+        if not ln:
             raise KeyError(f"Listing {listing_id} nicht gefunden")
-        if l.status != ListingStatus.ACTIVE.value:
-            raise ValueError(f"Listing nicht aktiv: {l.status}")
-        if int(time.time()) > l.expires_at:
-            l.status = ListingStatus.EXPIRED.value
+        if ln.status != ListingStatus.ACTIVE.value:
+            raise ValueError(f"Listing nicht aktiv: {ln.status}")
+        if int(time.time()) > ln.expires_at:
+            ln.status = ListingStatus.EXPIRED.value
             raise ValueError("Listing abgelaufen")
-        return l
+        return ln
