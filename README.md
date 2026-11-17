@@ -158,7 +158,7 @@ Relevante Governance-Grundlagen umfassen insbesondere:
 
 | Standard | Version | Verwendung |
 |---|---:|---|
-| ATC-STD-000 | 1.3.0 | Governance Root |
+| ATC-STD-000 | 1.3.1 | Governance Root |
 | ATC-STD-README-001 | 1.0.0 | README-Struktur und Metadaten |
 | ATC-STD-MD-001 | 1.0.0 | Markdown-Konformität |
 | ATC-STD-203 | 1.0.1 | Security und Release Gates |
